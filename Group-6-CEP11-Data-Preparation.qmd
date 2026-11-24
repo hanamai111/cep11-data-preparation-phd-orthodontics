@@ -20,9 +20,9 @@ engine: markdown
 
 # Assignment pathway and data sources
 
-Dr. Jae Min Jung's Step 4-2b assigns GA4 teams SQL and Looker Studio training in place of the survey assignment when digital behavioral data are used instead of survey data. It permits submitting a half-page Data Readiness Summary and an integrity-check appendix after the BigQuery assignments. Its BigQuery-to-R example previews IBM 6530. Step 4-2a requires QMD and HTML, GitHub Pages, and clickable repository and Pages links in the appendix. Its survey workflow covers Qualtrics preparation, SPSS import, labels, measures, recoding, reliability, and composite scales. The two instruction pages did not display a separate deadline or specify a rule for teams using both sources. This report uses Step 4-2b as the primary pathway and includes a supplementary survey workflow. [Step 4-2a][4a] · [Step 4-2b][4b]
+Dr. Jae Min Jung's Step 4-2b assigns GA4 teams SQL and Looker Studio training in place of the survey assignment when digital behavioral data are used instead of survey data. It permits submitting a half-page Data Readiness Summary and an integrity-check appendix after the BigQuery assignments. Its BigQuery-to-R example previews IBM 6530. Step 4-2a requires QMD and HTML, GitHub Pages, and clickable repository and Pages links in the appendix. Its survey workflow covers Qualtrics preparation, SPSS import, labels, measures, recoding, reliability, and composite scales. The Canvas assignment lists November 15, 2026 at 11:59 p.m. Pacific as the due date and accepts HTML and QMD files for a group submission. Step 4-2b permits submission after the BigQuery assignments. The instructions give no separate rule for mixed-source teams. This report uses Step 4-2b as the primary pathway and includes a supplementary survey workflow. [Canvas assignment][assignment] · [Step 4-2a][4a] · [Step 4-2b][4b]
 
-The secondary source is Google's official historical GA4 ecommerce sample. GA4-3 and GA4-5 document the faculty-approved substitution while the production export was unavailable. The primary source planned for the client is the Group 6 Qualtrics questionnaire. The current working questionnaire and Construct and Measurement Table define the survey variables and draft research questions about website evaluations, intention, and differences between residents of San Gabriel and Chino Hills. [GA4-3][g3] · [GA4-5][g5]
+The secondary source is Google's official historical GA4 ecommerce sample. GA4-3 and GA4-5 document the faculty-approved substitution while the production export was unavailable. The CEP methods chapter describes consumer research under AO5. The primary source planned for the client is the Group 6 Qualtrics questionnaire. The current working questionnaire and Construct and Measurement Table define the survey variables and draft research questions about website evaluations, intention, and differences between residents of San Gabriel and Chino Hills. [CEP methods][methods] · [GA4-3][g3] · [GA4-5][g5]
 
 # GA4 Data Readiness Summary
 
@@ -47,7 +47,7 @@ Landing page was missing for **7.34%** of session rows. First-user source and me
 | Evidence | Status |
 |---|---|
 | PhD Orthodontics GA4 property `564417053` | Admin → Product links → BigQuery links displayed “No links yet” on November 23, 2026. |
-| Client Cloud project `phd-orthodontics-ga4-bigquery` | Previously designated project. The presence of a production export dataset, recent populated event tables, billing state, and teamwide query permissions are unverified. |
+| Client Cloud project `phd-orthodontics-ga4-bigquery` | Previously designated project. BigQuery Studio showed zero datasets visible to the current account in this project on November 23. A populated production export, billing state, and teamwide query permissions are unverified. |
 | Google public export | A new US BigQuery job queried `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` successfully. |
 | GA4-5 sample mart | A new query read all three existing views in `our-truth-494618-b1.ga4_sample_mart_v1`. Their row counts were 92, 360,129, and 4. The prior report recorded January 20, 2027 as the Sandbox expiry. |
 
@@ -202,6 +202,8 @@ WHERE _TABLE_SUFFIX BETWEEN '20201101' AND '20210131';
 - [GitHub Repository](https://github.com/hanamai111/cep11-data-preparation-phd-orthodontics)
 - [GitHub Pages report](https://hanamai111.github.io/cep11-data-preparation-phd-orthodontics/)
 
+[assignment]: https://canvas.cpp.edu/courses/143274/assignments/1513778?module_item_id=5422880
+[methods]: https://sheilaaa0312.github.io/Group-6-PhD-Orthodontics/cep-group-6-report.html#sec-ch3-methods
 [4a]: https://canvas.cpp.edu/courses/143274/pages/step-4-2a-apply-what-you-learned-to-your-project-and-work-on-cep-11-data-preparation-survey-data?module_item_id=5422879
 [4b]: https://canvas.cpp.edu/courses/143274/pages/step-4-2b-what-to-do-when-you-have-ga4-data-for-cep-11-data-preparation?module_item_id=5610772
 [p11]: https://canvas.cpp.edu/courses/143274/files/17028203/preview
