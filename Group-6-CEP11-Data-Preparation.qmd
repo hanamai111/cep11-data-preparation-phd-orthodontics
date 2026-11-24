@@ -107,7 +107,8 @@ The questionnaire draft uses adult consent and eligibility screening, a single s
 | Readiness item | Status | Evidence or dependency |
 |---|---|---|
 | Questionnaire and Construct and Measurement Table | Completed | Reviewed both working documents. Item wording, candidate groupings, and intended routing inform the dictionary and code. |
-| Qualtrics editor, embedded data and export recodes | Unverified | `DecisionFocus` is proposed in the questionnaire notes. Match actual tags, recodes, carry-forward choices, privacy controls and display logic to the approved version before import. |
+| Qualtrics editor and flow | Completed for design review | Confirmed the consent exit, Both-only decision focus, multiple-topic follow-up, Chinese-only format item, exposure-conditioned ratings, and separate Cannot judge choice. No `DecisionFocus` embedded field was visible in the current flow. |
+| Metadata and export recodes | Partly verified | Options displayed recording incomplete responses after one week and Anonymize responses off. Confirm the approved privacy configuration, export tags, and recodes before import. |
 | Study authorization and response provenance | Pending authorization | Last known study status is draft/unsubmitted. The previously reported count of 12 has unresolved provenance and does not establish an eligible research sample. |
 | SPSS import and metadata inspection | Prepared but not executed on study data | P11 describes checking collection/distribution status and exporting a labelled SPSS file. The approved team should document authorization and separately triage preview, pretest, unresolved and production cases. |
 | Core cleaning and scoring logic | Completed on synthetic tests | Preserves the raw subset, creates separate derived fields, and checks consent, screening, exposure, response status and composite behavior. |
