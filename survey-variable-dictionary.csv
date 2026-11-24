@@ -1,0 +1,48 @@
+logical_id,variable_label,measurement,logical_value_labels,display_rule,construct,notes
+C0,Consent to participate,nominal,Yes|No,survey entry,,
+S1,Adult eligibility,nominal,Yes|No|Prefer not to answer,C0 = Yes,,
+S2,Orthodontic decision role,nominal,Myself only|My child only|Both|Neither|Prefer not to answer,C0 = Yes and S1 = Yes,,
+S2a,Selected decision focus,nominal,Self|Child,eligible and S2 = Both,,
+S3,City of residence,nominal,San Gabriel|Chino Hills|Another city|Prefer not to answer,eligible,,Other city text is optional and restricted
+Q1,Expected provider decision timing,ordinal time bands + nominal statuses,Within 3 months|4–6 months|7–12 months|More than 12 months|Undecided|Already chosen|Prefer not to answer,eligible,,
+Q2_option_01,Treatment options,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_02,Expected treatment duration,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_03,Fees,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_04,Insurance/payment options,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_05,Provider qualifications,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_06,Patient experiences/reviews,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_07,Appointment process,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_08,Location/travel,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_09,Other,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_10,No information needed,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_11,Not sure,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_option_12,Prefer not to answer,nominal binary,0 Not selected|1 Selected,eligible,,Last three choices are individually exclusive. Zero only for shown and answered Q2.
+Q2_priority,Top selected information topic,nominal,Selected Q2 topic,eligible and multiple Q2 topics selected,,Verify carry-forward choices and export tag
+Q3,Preferred information language,nominal,English|Spanish|Chinese|Another language|No preference|Prefer not to answer,eligible,,
+Q3a,Preferred written Chinese format,nominal,Simplified Chinese|Traditional Chinese|Either|Not sure,eligible and Q3 = Chinese,,
+C1,Prior familiarity with the practice,ordinal levels + nominal statuses,Never heard of it|A little familiar|Moderately familiar|Very familiar|Not sure|Prefer not to answer,eligible,,
+Q4,Confirmed website material review,nominal,Reviewed|Could not view clearly|Visible but not reviewed|Prefer not to answer,eligible,,
+IQ1,Clarity,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Information quality facets,Forward direction
+IQ2,Relevance,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Information quality facets,Forward direction
+IQ3,Coverage of needed topics,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Information quality facets,Forward direction
+IQ4,Helps decide whether to contact,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Information quality facets,Forward direction
+MC1,Accurate,ordinal,1 Not at all|2 Slightly|3 Moderately|4 Very|5 Extremely|Cannot judge,eligible and Q4 = Reviewed,Message credibility,Forward direction
+MC2,Authentic,ordinal,1 Not at all|2 Slightly|3 Moderately|4 Very|5 Extremely|Cannot judge,eligible and Q4 = Reviewed,Message credibility,Forward direction
+MC3,Believable,ordinal,1 Not at all|2 Slightly|3 Moderately|4 Very|5 Extremely|Cannot judge,eligible and Q4 = Reviewed,Message credibility,Forward direction
+TR1,Honesty,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Provider trustworthiness,Forward direction
+TR2,Keeps commitments,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Provider trustworthiness,Forward direction
+TR3,Sincerity,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Provider trustworthiness,Forward direction
+PR1,Carefully prepared,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Presentation professionalism,Forward direction
+PR2,Orderly,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Presentation professionalism,Forward direction
+PR3,Appropriate for healthcare,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Presentation professionalism,Forward direction
+CI1,Intend to request,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Three-month San Gabriel consultation intention,Forward direction
+CI2,Plan to request,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Three-month San Gabriel consultation intention,Forward direction
+CI3,Will make an effort to request,ordinal,1 Strongly disagree|2 Disagree|3 Neither agree nor disagree|4 Agree|5 Strongly agree|Cannot judge,eligible and Q4 = Reviewed,Three-month San Gabriel consultation intention,Forward direction
+IQ_followup,Topics needing more information,verify live format,Verify options and recodes,eligible and Q4 = Reviewed,,
+C2,Prior treatment of the selected person,nominal,Yes|No|Not sure|Prefer not to answer,eligible,,
+OE1,Content and willingness to contact,text,,eligible and Q4 = Reviewed,,Restricted free text
+OE2,Top unanswered provider decision question,text,,eligible,,Restricted free text
+OE3,Expected information not found,text,,eligible and Q4 = Reviewed,,Restricted free text
+S3_other,Optional other city text,text,,eligible and S3 = Another city,,Restricted free text
+Q2_other,Optional other topic text,text,,eligible and Q2 Other selected,,Restricted free text
+Q3_other,Optional other language text,text,,eligible and Q3 = Another language,,Restricted free text

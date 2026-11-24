@@ -1,0 +1,213 @@
+---
+title: "CEP 11 — Data Preparation"
+subtitle: "PhD Orthodontics · IBM 6500 · Steps 4-2b and 4-2a"
+author: "MSDM CEP Group 6 — PhD Orthodontics"
+date: 2026-11-23
+date-format: "MMMM D, YYYY"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    embed-resources: true
+    code-copy: true
+    code-overflow: scroll
+engine: markdown
+---
+
+**Team** Han Mai, Xueying Luo, Yujia Luo, Pei Yun Chuang, and Willy Su
+
+# Assignment pathway and data sources
+
+Dr. Jae Min Jung's Step 4-2b assigns GA4 teams SQL and Looker Studio training in place of the survey assignment when digital behavioral data are used instead of survey data. It permits submitting a half-page Data Readiness Summary and an integrity-check appendix after the BigQuery assignments. Its BigQuery-to-R example previews IBM 6530. Step 4-2a requires QMD and HTML, GitHub Pages, and clickable repository and Pages links in the appendix. Its survey workflow covers Qualtrics preparation, SPSS import, labels, measures, recoding, reliability, and composite scales. The two instruction pages did not display a separate deadline or specify a rule for teams using both sources. This report uses Step 4-2b as the primary pathway and includes a supplementary survey workflow. [Step 4-2a][4a] · [Step 4-2b][4b]
+
+The secondary source is Google's official historical GA4 ecommerce sample. GA4-3 and GA4-5 document the faculty-approved substitution while the production export was unavailable. The primary source planned for the client is the Group 6 Qualtrics questionnaire. The current working questionnaire and Construct and Measurement Table define the survey variables and draft research questions about website evaluations, intention, and differences between residents of San Gabriel and Chino Hills. [GA4-3][g3] · [GA4-5][g5]
+
+# GA4 Data Readiness Summary
+
+The Google sample covers **November 1, 2020–January 31, 2021**, with **92 consecutive days**, **4,295,584 events**, **270,154 observed pseudonymous IDs**, and **360,129 observed sessions**. Sessions use the pseudonymous ID and integer GA4 session ID together. On November 23, the PhD Orthodontics property's BigQuery Links screen showed no links. Production tables, event volume, and teamwide read access remain unverified.
+
+| Event or requirement | Google sample | PhD Orthodontics | Interpretation |
+|---|---|---|---|
+| `page_view` | Present · 1,350,428 | Unverified | Service-page analysis needs an approved path list. |
+| `consultation_cta_click` | Missing | Unverified | Generic sample `click` measures a different interaction. |
+| `form_start` | Missing | Unverified | Requires a verified start for the designated form. |
+| `generate_lead` | Missing | Unverified | Requires confirmed request acceptance, a stable form ID and deduplication. |
+| Qualified Consultation Leads | Qualification data unavailable | Unverified | Requires practice-approved rules and lead-status records. |
+
+Landing page was missing for **7.34%** of session rows. First-user source and medium had export placeholders in **33.19%** and **20.74%** of session rows, respectively. Direct numerical reconciliation was infeasible because the demo UI and BigQuery sample do not share a verified matching property, event population and date range.
+
+**Technical prototype readiness.** The public export supports daily QA, page and acquisition exploration, session analysis, and an ecommerce funnel. **Client analytics readiness.** Live reporting requires a verified export and read access, validation of the consultation events, and approved inquiry and qualification data. Next, confirm the daily export with the agency, test acceptance and deduplication end to end, and reconcile the same date window and metric definitions before reporting qualified leads or Google Ads performance. [Measurement blueprint][blue]
+
+# GA4 integrity assessment
+
+## A. Access and export setup
+
+| Evidence | Status |
+|---|---|
+| PhD Orthodontics GA4 property `564417053` | Admin → Product links → BigQuery links displayed “No links yet” on November 23, 2026. |
+| Client Cloud project `phd-orthodontics-ga4-bigquery` | Previously designated project. The presence of a production export dataset, recent populated event tables, billing state, and teamwide query permissions are unverified. |
+| Google public export | A new US BigQuery job queried `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` successfully. |
+| GA4-5 sample mart | A new query read all three existing views in `our-truth-494618-b1.ga4_sample_mart_v1`. Their row counts were 92, 360,129, and 4. The prior report recorded January 20, 2027 as the Sandbox expiry. |
+
+Production verification requires a link with daily export enabled, an accessible `analytics_<property_id>` dataset, populated recent daily tables, and a successful read by each team member. Export starts prospectively, so the first usable reporting window depends on when the link goes live. [GA4-5][g5] · [GA4 export schema][schema]
+
+## B. Coverage and volume
+
+The sample's 92 recorded event dates cover the entire 92-day interval with no gaps. Daily event counts ranged from **21,355 to 92,199**, with a mean of **46,691.13**. December 8–10 were the three highest-volume dates (92,199, 82,315, and 80,855). Investigating the spike would require event, hostname, device, country, and campaign breakdowns and a known promotion or release calendar. The fresh SQL measured volume directly. Live Looker Studio connector and time-series verification remain pending. For period reporting, recompute distinct IDs across the whole window because summing daily distinct counts can count the same ID more than once.
+
+## C. Event inventory
+
+| Event | Count | Event | Count |
+|---|---:|---|---:|
+| `page_view` | 1,350,428 | `user_engagement` | 1,058,721 |
+| `scroll` | 493,072 | `view_item` | 386,068 |
+| `session_start` | 354,970 | `first_visit` | 257,462 |
+| `view_promotion` | 190,104 | `add_to_cart` | 58,543 |
+| `begin_checkout` | 38,757 | `select_item` | 31,007 |
+| `view_search_results` | 26,172 | `add_shipping_info` | 19,722 |
+| `add_payment_info` | 13,899 | `select_promotion` | 9,450 |
+| `purchase` | 5,692 | `click` | 1,446 |
+| `view_item_list` | 71 | | |
+
+All five requested ecommerce events are present. The 71 `view_item_list` events are sparse compared with 386,068 `view_item` events and warrant review before using list views as a denominator. Counts alone do not establish a tagging defect. Each client-specific event remains unverified. The blueprint calls for sanitized `page_location`, `cta_id` and `cta_location` for CTA analysis, and a stable `form_id` plus `lead_type = consultation_request` for validated lead reporting. Production parameter names, types and coverage need confirmation. [Measurement blueprint][blue]
+
+## D. Field completeness
+
+| Grain | Field | NULL or normalized blank | Placeholder | Denominator |
+|---|---|---:|---:|---:|
+| Event | `user_pseudo_id` | 0 | — | 4,295,584 |
+| Event | Integer `ga_session_id` | 0 | — | 4,295,584 |
+| Page-view event | Nonblank `page_location` | 0 | Not profiled | 1,350,428 |
+| Session | Landing page | 26,446 (7.34%) | 0 | 360,129 |
+| Session | Device category | 0 | 0 | 360,129 |
+| Session | Country | 0 | 2,882 (0.80%) | 360,129 |
+| Session | First-user source | 0 | 119,525 (33.19%) | 360,129 |
+| Session | First-user medium | 0 | 74,687 (20.74%) | 360,129 |
+
+GA4-5 checked raw NULL and blank user IDs separately, and both were zero. Session dimensions normalize trimmed blanks to NULL. Placeholder counts use `(not set)`, `<other>`, `(data deleted)`, and `(other)`. Conventional `(direct)` and `(none)` labels are outside that count. Source and medium describe **first-user acquisition**, recorded on the first observed event of each mart session. Landing page is the normalized URL on the first observed page view. Sessions can lack a page view, and page normalization can remove otherwise nonblank URL content. [GA4-5 validation][g5]
+
+## E. Identifiers and duplicates
+
+A session key represents the pair of the trimmed `user_pseudo_id` and an integer `ga_session_id`. The sample export had usable values for both on every row checked. The mart returned **zero duplicate session keys**, **845 cross-date sessions**, and **5,272 sessions with no observed `session_start`** in the fixed window. Cross-date means the pair appeared on more than one exported event date. Window edges can truncate activity. The raw comparison returned **zero excess rows** sharing a complete user/timestamp/event-name triplet. This diagnostic can miss repeated instrumentation with different timestamps, and identical triplets, when observed, require investigation before changing event counts.
+
+## F. Reconciliation
+
+GA4-5's prior raw-to-mart reconciliation had zero differences for total events, `page_view`, and `purchase`. That validates the sample transformation. Direct numerical reconciliation with GA4 was infeasible because demo property `213025502` was viewed in an October–November 2026 window, whereas sample dates are in 2020–2021 and the underlying event population is unverified. For production, align property and streams, property time zone, processing cutoff, date range, filters, event population, reporting identity, and definitions. Compare GA4 connector event counts, active users where supported, and sessions with scope-aligned BigQuery results. Investigate residual differences using consent, modeling, thresholding, reporting estimates, and late arrivals. [GA4-3 reconciliation][g3] · [GA4 export schema][schema]
+
+## G. Business sense check
+
+The sample supports testing daily activity, page views, acquisition dimensions, sessions and a purchase funnel. GA4-5 found 61,252 product-view entrants and 2,833 IDs progressing through all four ordered stages, potentially across sessions. Those counts describe ecommerce behavior. The client goal requires deduplicated eligible inquiries meeting practice-approved qualification criteria. Confirmed Consultation Inquiries are the interim proxy. The blueprint counts distinct started sessions with a later `generate_lead` for the same form within the same session and reporting period, divided by distinct started sessions. Report accepted requests without an observed start separately. For Google Ads evaluation, validate session/campaign attribution and link eligible inquiries to approved campaign and cost records. Review test/internal traffic, approved hostnames, and unusual country/device mixes during client QA. Bot and internal traffic classification was not established in the available sample. [GA4-5][g5] · [Measurement blueprint][blue]
+
+# Survey data preparation
+
+The questionnaire draft uses adult consent and eligibility screening, a single self/child decision focus, and an exposure check after seven San Gabriel website screenshots. Ratings and two optional open-ended items are conditional on confirmed review. The consultation intention horizon is three months and the outcome concerns the existing San Gabriel practice. City of residence defines the two-city comparison. Other-city records can remain in eligible overall summaries, subject to authorization. Written answers and alternate text fields require restricted access and review for incidental identifying details.
+
+| Readiness item | Status | Evidence or dependency |
+|---|---|---|
+| Questionnaire and Construct and Measurement Table | Completed | Reviewed both working documents. Item wording, candidate groupings, and intended routing inform the dictionary and code. |
+| Qualtrics editor, embedded data and export recodes | Unverified | `DecisionFocus` is proposed in the questionnaire notes. Match actual tags, recodes, carry-forward choices, privacy controls and display logic to the approved version before import. |
+| Study authorization and response provenance | Pending authorization | Last known study status is draft/unsubmitted. The previously reported count of 12 has unresolved provenance and does not establish an eligible research sample. |
+| SPSS import and metadata inspection | Prepared but not executed on study data | P11 describes checking collection/distribution status and exporting a labelled SPSS file. The approved team should document authorization and separately triage preview, pretest, unresolved and production cases. |
+| Core cleaning and scoring logic | Completed on synthetic tests | Preserves the raw subset, creates separate derived fields, and checks consent, screening, exposure, response status and composite behavior. |
+| Exact export mapping and supplemental questions | Prepared but not executed | Dictionary covers Q2 options and follow-ups plus written answers. Exact export tags and recodes are pending. Core script handles screening, context questions, and 16 ratings. |
+| Empirical reliability and composite validation | Pending authorization | Research estimates require authorized eligible responses and enough complete observations. |
+
+Preserve Qualtrics records. Once authorized, designated staff can use known preview/test identifiers, collection-channel and time records, and a secure provenance ledger to exclude test and disputed rows in a separate analysis copy. Keep the original read-only and document inclusion decisions without releasing respondent identifiers. Confirm data minimization, access, retention, and disclosure limits with the approved protocol before implementation. [P11 handout][p11] · [Case 31 R guide][case]
+
+# R preparation workflow
+
+1. Inspect the authorized labelled SPSS export with `haven::read_sav(user_na = TRUE)`. Keep the file and original labels in restricted storage. Validate recodes against the questionnaire, Qualtrics export labels, and the versioned mapping. Inspect original labels, types, and missing counts before recoding.
+2. Use the questionnaire's logical IDs as dictionary keys. Assign labels only on derived columns. Keep response-status companions for missing, not applicable, refusal, screening termination, and Cannot judge. Numeric zero remains valid only where the item defines it, such as a verified unselected Q2 option on an answered question. Confirm Q2 selection context before converting unchecked to zero. Outside the shown/answered population, leave option values missing and capture routing status.
+3. Derive eligibility, decision focus, confirmed exposure, a two-city grouping, and a timing-band ordered factor using `dplyr::mutate()`. Keep Undecided and Already chosen as separate timing statuses. Exclude cases with incomplete or unconfirmed exposure from content ratings. Release only the eligible, authorized, restricted analysis copy after reviewing the outputs and export fields.
+
+```r
+source("survey-preparation.R")
+test_synthetic()
+
+# After authorization and after verifying the SPSS export mapping:
+# raw <- read_authorized_sav(approved_path, authorized = TRUE)
+# dictionary_from_export <- inspect_metadata(raw)
+# clean <- prepare_core(raw, verified_column_map, verified_code_maps,
+#                       reviewed_provenance, authorized = TRUE)
+# write_authorized_clean_sav(clean, restricted_new_path)
+```
+
+**Synthetic test data — not participant responses or empirical research findings.** Five generated records tested provenance exclusion, consent refusal, decision focus, city nonresponse, Cannot judge, exposure skip, and mean scoring. The test completed in R. [R source](survey-preparation.R) · [Variable dictionary](survey-variable-dictionary.csv)
+
+# Reliability and composite scale readiness
+
+| Construct | Items | Proposed scoring |
+|---|---|---|
+| Information quality | IQ1–IQ4 | Report clarity, relevance, coverage and contact usefulness individually. |
+| Message credibility | MC1–MC3 | Candidate mean across three descriptive ratings. |
+| Provider trustworthiness | TR1–TR3 | Candidate mean across three agreement ratings. |
+| Presentation professionalism | PR1–PR3 | Provisional candidate mean after wording and measurement review. |
+| Consultation intention | CI1–CI3 | Candidate mean across three agreement ratings, interpreted as three-month intention toward San Gabriel. |
+
+Ratings have ordered 1–5 response categories. All verified items point in the same direction, so no reverse coding is specified. Cannot judge is separate from ordinary nonresponse and never contributes to a mean. The default composite rule requires all three items and rescales nothing. A two-item rule can be tested as a documented sensitivity analysis after approval. Higher means indicate more of the measured attribute. Treat numeric means as approximately interval only with a stated equal-spacing assumption and use an ordinal sensitivity analysis when appropriate.
+
+For authorized data, examine item distributions, complete-case N, inter-item correlations, poorly performing items, floor/ceiling patterns, and Cronbach's alpha. Review dimensionality and construct separation across candidate groups, using ordinal correlations when sample size and cell counts support them. An isolated one-factor model for three items can be just-identified, so its fit alone cannot establish dimensionality. Release a mean only after item meaning and measurement evidence support it. Keep empirical reliability pending until the approved sample is available.
+
+```r
+# After approval of the sample and analysis plan:
+# result <- evaluate_candidate(clean, "message_credibility", min_complete_n = plan_n)
+# psych::fa(result$complete_items, nfactors = 1, cor = "poly")
+# clean <- score_approved_scale(clean, "message_credibility", approved = TRUE)
+```
+
+# References {.unnumbered}
+
+- IBM 6500. [Step 4-2a][4a] · [Step 4-2b][4b] · [P11 — Downloading Raw Data][p11].
+- Jung, J. *Data Preparation Assignment, Case 31*. [R guide][case].
+- Group 6. [GA4-1 Measurement Blueprint][blue] · [GA4-3][g3] · [GA4-5][g5]. Survey documentation draws on the November working questionnaire and CEP 04 Construct and Measurement Table.
+- Google. [GA4 ecommerce sample][sample] · [GA4 BigQuery export schema][schema] · [Basic BigQuery queries](https://developers.google.com/analytics/bigquery/basic-queries).
+- Qualtrics. [Exporting response data](https://www.qualtrics.com/support/survey-platform/data-and-analysis-module/data/download-data/export-data-overview/).
+- Tidyverse. [haven SPSS import and export](https://haven.tidyverse.org/reference/read_spss.html) · [dplyr mutate](https://dplyr.tidyverse.org/reference/mutate.html).
+
+# Appendix {.unnumbered}
+
+## Integrity checklist and reproduction
+
+| Canvas check | Result |
+|---|---|
+| A · Access/export | Sample and existing mart read successfully. The client property displayed zero links. Production tables and team access are unverified. |
+| B · Coverage | Fresh SQL confirmed 92 continuous days. Daily min/max and peak dates documented. Looker Studio verification pending. |
+| C · Event inventory | Fresh SQL confirmed 17 event names. Client names and parameters require production QA. |
+| D · Completeness | Job results and prior validation document identifier, URL and session-dimension quality. |
+| E · Identifier and duplicates | Composite keys, timestamp triplets, cross-date sessions and unobserved starts checked. |
+| F · Reconciliation | Prior raw-to-mart equality verified. A directly comparable GA4 UI population was unavailable. |
+| G · Business sense | Sample supports ecommerce prototype. Client inquiry, qualification, attribution and traffic QA are pending. |
+
+Run the two statements in [ga4-integrity-checks.sql](ga4-integrity-checks.sql) separately in a US BigQuery project. The first reads the public export directly. The second reads the three GA4-5 views, which have separate access and expiration requirements. The November 23 job IDs end in `5QgjWCtSnRDVYUw43iFWN9FPqTH9` and `v5aqiwImaCnfI7kZPLFzVzJC3vnP`. The public baseline remains reproducible if Sandbox views expire. See the [GA4-3 evidence][g3], [GA4-5 results][g5], [saved mart SQL](https://hanamai111.github.io/ga4-5-analytics-mart-v1/mart-views.sql) and [validation SQL](https://hanamai111.github.io/ga4-5-analytics-mart-v1/validation.sql).
+
+```sql
+-- Independent reproduction of sample coverage and unique IDs.
+SELECT MIN(event_date) AS first_day,
+  MAX(event_date) AS last_day,
+  COUNT(DISTINCT event_date) AS recorded_dates,
+  COUNT(*) AS events,
+  COUNT(DISTINCT NULLIF(TRIM(user_pseudo_id), '')) AS observed_ids
+FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+WHERE _TABLE_SUFFIX BETWEEN '20201101' AND '20210131';
+```
+
+## Survey mapping and authorization
+
+[Survey variable dictionary](survey-variable-dictionary.csv) · [R preparation script](survey-preparation.R). Logical IDs and response labels describe the working instrument. The production mapping requires export-version verification and authorized data. No participant records were accessed or downloaded, and no empirical reliability statistics were computed.
+
+## Publication links
+
+- [GitHub Repository](https://github.com/hanamai111/cep11-data-preparation-phd-orthodontics)
+- [GitHub Pages report](https://hanamai111.github.io/cep11-data-preparation-phd-orthodontics/)
+
+[4a]: https://canvas.cpp.edu/courses/143274/pages/step-4-2a-apply-what-you-learned-to-your-project-and-work-on-cep-11-data-preparation-survey-data?module_item_id=5422879
+[4b]: https://canvas.cpp.edu/courses/143274/pages/step-4-2b-what-to-do-when-you-have-ga4-data-for-cep-11-data-preparation?module_item_id=5610772
+[p11]: https://canvas.cpp.edu/courses/143274/files/17028203/preview
+[case]: https://jaejungca.github.io/case31/IC-M08-Data-Preparation-Case-31-R.html
+[blue]: https://hanamai111.github.io/ga4-analytics-blueprint-phd-orthodontics/ga4-1-analytics-blueprint.html
+[g3]: https://hanamai111.github.io/ga4-3-bigquery-first-five-queries/
+[g5]: https://hanamai111.github.io/ga4-5-analytics-mart-v1/
+[sample]: https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset
+[schema]: https://support.google.com/analytics/answer/7029846

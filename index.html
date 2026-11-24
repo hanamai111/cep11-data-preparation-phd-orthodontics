@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="MSDM CEP Group 6 — PhD Orthodontics" />
+  <meta name="dcterms.date" content="2026-11-23" />
+  <title>CEP 11 — Data Preparation</title>
+  <style>
+
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+border: none;
+border-top: 1px solid #1a1a1a;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style>
+:root{color-scheme:light;--ink:#162b37;--muted:#41616c;--accent:#0a6172;--line:#d9e5e8}
+body{max-width:68rem;margin:0 auto;padding:2.5rem 1.25rem 5rem;color:var(--ink);background:#fff;font:16px/1.64 system-ui,sans-serif}
+header{background:#eff7f8;border-top:5px solid var(--accent);padding:1.6rem 2rem;margin-bottom:1.8rem}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.3rem);letter-spacing:-.045em;line-height:1.15}
+.subtitle,.author,.date{color:var(--muted);margin:.5rem 0}
+#TOC{background:#f6f9fa;padding:.9rem 1rem;border:1px solid var(--line);border-radius:.4rem}
+#TOC ul{margin:.15rem 0;padding-left:1.25rem}
+a{color:var(--accent);text-underline-offset:.17em}
+h1,h2{line-height:1.25;margin-top:2rem} h1{border-bottom:1px solid var(--line);padding-bottom:.5rem} header h1{border:0;padding:0}
+table{width:100%;border-collapse:collapse;margin:1.2rem 0}
+td,th{text-align:left;vertical-align:top;padding:.52rem .66rem;border-bottom:1px solid var(--line)}
+th{background:#e8f3f4} tbody tr:nth-child(even){background:#f8fbfc}
+code{background:#eef4f5;padding:.12rem .22rem;overflow-wrap:anywhere} pre{padding:1rem;background:#f3f7f8;overflow:auto} pre code{padding:0;background:none;overflow-wrap:normal}
+@media(max-width:650px){table{display:block;overflow-x:auto} td,th{min-width:7rem}}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CEP 11 — Data Preparation</h1>
+<p class="subtitle">PhD Orthodontics · IBM 6500 · Steps 4-2b and
+4-2a</p>
+<p class="author">MSDM CEP Group 6 — PhD Orthodontics</p>
+<p class="date">2026-11-23</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#assignment-pathway-and-data-sources" id="toc-assignment-pathway-and-data-sources"><span class="toc-section-number">1</span> Assignment pathway and data
+sources</a></li>
+<li><a href="#ga4-data-readiness-summary" id="toc-ga4-data-readiness-summary"><span class="toc-section-number">2</span> GA4 Data Readiness Summary</a></li>
+<li><a href="#ga4-integrity-assessment" id="toc-ga4-integrity-assessment"><span class="toc-section-number">3</span> GA4 integrity assessment</a>
+<ul>
+<li><a href="#a.-access-and-export-setup" id="toc-a.-access-and-export-setup"><span class="toc-section-number">3.1</span> A. Access and export
+setup</a></li>
+<li><a href="#b.-coverage-and-volume" id="toc-b.-coverage-and-volume"><span class="toc-section-number">3.2</span> B. Coverage and volume</a></li>
+<li><a href="#c.-event-inventory" id="toc-c.-event-inventory"><span class="toc-section-number">3.3</span> C. Event inventory</a></li>
+<li><a href="#d.-field-completeness" id="toc-d.-field-completeness"><span class="toc-section-number">3.4</span> D. Field completeness</a></li>
+<li><a href="#e.-identifiers-and-duplicates" id="toc-e.-identifiers-and-duplicates"><span class="toc-section-number">3.5</span> E. Identifiers and
+duplicates</a></li>
+<li><a href="#f.-reconciliation" id="toc-f.-reconciliation"><span class="toc-section-number">3.6</span> F. Reconciliation</a></li>
+<li><a href="#g.-business-sense-check" id="toc-g.-business-sense-check"><span class="toc-section-number">3.7</span> G. Business sense check</a></li>
+</ul></li>
+<li><a href="#survey-data-preparation" id="toc-survey-data-preparation"><span class="toc-section-number">4</span> Survey data preparation</a></li>
+<li><a href="#r-preparation-workflow" id="toc-r-preparation-workflow"><span class="toc-section-number">5</span> R preparation workflow</a></li>
+<li><a href="#reliability-and-composite-scale-readiness" id="toc-reliability-and-composite-scale-readiness"><span class="toc-section-number">6</span> Reliability and composite scale
+readiness</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+<li><a href="#appendix" id="toc-appendix">Appendix</a>
+<ul>
+<li><a href="#integrity-checklist-and-reproduction" id="toc-integrity-checklist-and-reproduction"><span class="toc-section-number">6.1</span> Integrity checklist and
+reproduction</a></li>
+<li><a href="#survey-mapping-and-authorization" id="toc-survey-mapping-and-authorization"><span class="toc-section-number">6.2</span> Survey mapping and
+authorization</a></li>
+<li><a href="#publication-links" id="toc-publication-links"><span class="toc-section-number">6.3</span> Publication links</a></li>
+</ul></li>
+</ul>
+</nav>
+<p><strong>Team</strong> Han Mai, Xueying Luo, Yujia Luo, Pei Yun
+Chuang, and Willy Su</p>
+<h1 data-number="1" id="assignment-pathway-and-data-sources"><span class="header-section-number">1</span> Assignment pathway and data
+sources</h1>
+<p>Dr. Jae Min Jung’s Step 4-2b assigns GA4 teams SQL and Looker Studio
+training in place of the survey assignment when digital behavioral data
+are used instead of survey data. It permits submitting a half-page Data
+Readiness Summary and an integrity-check appendix after the BigQuery
+assignments. Its BigQuery-to-R example previews IBM 6530. Step 4-2a
+requires QMD and HTML, GitHub Pages, and clickable repository and Pages
+links in the appendix. Its survey workflow covers Qualtrics preparation,
+SPSS import, labels, measures, recoding, reliability, and composite
+scales. The two instruction pages did not display a separate deadline or
+specify a rule for teams using both sources. This report uses Step 4-2b
+as the primary pathway and includes a supplementary survey workflow. <a href="https://canvas.cpp.edu/courses/143274/pages/step-4-2a-apply-what-you-learned-to-your-project-and-work-on-cep-11-data-preparation-survey-data?module_item_id=5422879">Step
+4-2a</a> · <a href="https://canvas.cpp.edu/courses/143274/pages/step-4-2b-what-to-do-when-you-have-ga4-data-for-cep-11-data-preparation?module_item_id=5610772">Step
+4-2b</a></p>
+<p>The secondary source is Google’s official historical GA4 ecommerce
+sample. GA4-3 and GA4-5 document the faculty-approved substitution while
+the production export was unavailable. The primary source planned for
+the client is the Group 6 Qualtrics questionnaire. The current working
+questionnaire and Construct and Measurement Table define the survey
+variables and draft research questions about website evaluations,
+intention, and differences between residents of San Gabriel and Chino
+Hills. <a href="https://hanamai111.github.io/ga4-3-bigquery-first-five-queries/">GA4-3</a>
+· <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5</a></p>
+<h1 data-number="2" id="ga4-data-readiness-summary"><span class="header-section-number">2</span> GA4 Data Readiness Summary</h1>
+<p>The Google sample covers <strong>November 1, 2020–January 31,
+2021</strong>, with <strong>92 consecutive days</strong>,
+<strong>4,295,584 events</strong>, <strong>270,154 observed pseudonymous
+IDs</strong>, and <strong>360,129 observed sessions</strong>. Sessions
+use the pseudonymous ID and integer GA4 session ID together. On November
+23, the PhD Orthodontics property’s BigQuery Links screen showed no
+links. Production tables, event volume, and teamwide read access remain
+unverified.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Event or requirement</th>
+<th>Google sample</th>
+<th>PhD Orthodontics</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>page_view</code></td>
+<td>Present · 1,350,428</td>
+<td>Unverified</td>
+<td>Service-page analysis needs an approved path list.</td>
+</tr>
+<tr>
+<td><code>consultation_cta_click</code></td>
+<td>Missing</td>
+<td>Unverified</td>
+<td>Generic sample <code>click</code> measures a different
+interaction.</td>
+</tr>
+<tr>
+<td><code>form_start</code></td>
+<td>Missing</td>
+<td>Unverified</td>
+<td>Requires a verified start for the designated form.</td>
+</tr>
+<tr>
+<td><code>generate_lead</code></td>
+<td>Missing</td>
+<td>Unverified</td>
+<td>Requires confirmed request acceptance, a stable form ID and
+deduplication.</td>
+</tr>
+<tr>
+<td>Qualified Consultation Leads</td>
+<td>Qualification data unavailable</td>
+<td>Unverified</td>
+<td>Requires practice-approved rules and lead-status records.</td>
+</tr>
+</tbody>
+</table>
+<p>Landing page was missing for <strong>7.34%</strong> of session rows.
+First-user source and medium had export placeholders in
+<strong>33.19%</strong> and <strong>20.74%</strong> of session rows,
+respectively. Direct numerical reconciliation was infeasible because the
+demo UI and BigQuery sample do not share a verified matching property,
+event population and date range.</p>
+<p><strong>Technical prototype readiness.</strong> The public export
+supports daily QA, page and acquisition exploration, session analysis,
+and an ecommerce funnel. <strong>Client analytics readiness.</strong>
+Live reporting requires a verified export and read access, validation of
+the consultation events, and approved inquiry and qualification data.
+Next, confirm the daily export with the agency, test acceptance and
+deduplication end to end, and reconcile the same date window and metric
+definitions before reporting qualified leads or Google Ads performance.
+<a href="https://hanamai111.github.io/ga4-analytics-blueprint-phd-orthodontics/ga4-1-analytics-blueprint.html">Measurement
+blueprint</a></p>
+<h1 data-number="3" id="ga4-integrity-assessment"><span class="header-section-number">3</span> GA4 integrity assessment</h1>
+<h2 data-number="3.1" id="a.-access-and-export-setup"><span class="header-section-number">3.1</span> A. Access and export setup</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PhD Orthodontics GA4 property <code>564417053</code></td>
+<td>Admin → Product links → BigQuery links displayed “No links yet” on
+November 23, 2026.</td>
+</tr>
+<tr>
+<td>Client Cloud project <code>phd-orthodontics-ga4-bigquery</code></td>
+<td>Previously designated project. The presence of a production export
+dataset, recent populated event tables, billing state, and teamwide
+query permissions are unverified.</td>
+</tr>
+<tr>
+<td>Google public export</td>
+<td>A new US BigQuery job queried
+<code>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</code>
+successfully.</td>
+</tr>
+<tr>
+<td>GA4-5 sample mart</td>
+<td>A new query read all three existing views in
+<code>our-truth-494618-b1.ga4_sample_mart_v1</code>. Their row counts
+were 92, 360,129, and 4. The prior report recorded January 20, 2027 as
+the Sandbox expiry.</td>
+</tr>
+</tbody>
+</table>
+<p>Production verification requires a link with daily export enabled, an
+accessible <code>analytics_&lt;property_id&gt;</code> dataset, populated
+recent daily tables, and a successful read by each team member. Export
+starts prospectively, so the first usable reporting window depends on
+when the link goes live. <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5</a> ·
+<a href="https://support.google.com/analytics/answer/7029846">GA4 export
+schema</a></p>
+<h2 data-number="3.2" id="b.-coverage-and-volume"><span class="header-section-number">3.2</span> B. Coverage and volume</h2>
+<p>The sample’s 92 recorded event dates cover the entire 92-day interval
+with no gaps. Daily event counts ranged from <strong>21,355 to
+92,199</strong>, with a mean of <strong>46,691.13</strong>. December
+8–10 were the three highest-volume dates (92,199, 82,315, and 80,855).
+Investigating the spike would require event, hostname, device, country,
+and campaign breakdowns and a known promotion or release calendar. The
+fresh SQL measured volume directly. Live Looker Studio connector and
+time-series verification remain pending. For period reporting, recompute
+distinct IDs across the whole window because summing daily distinct
+counts can count the same ID more than once.</p>
+<h2 data-number="3.3" id="c.-event-inventory"><span class="header-section-number">3.3</span> C. Event inventory</h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th style="text-align: right;">Count</th>
+<th>Event</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>page_view</code></td>
+<td style="text-align: right;">1,350,428</td>
+<td><code>user_engagement</code></td>
+<td style="text-align: right;">1,058,721</td>
+</tr>
+<tr>
+<td><code>scroll</code></td>
+<td style="text-align: right;">493,072</td>
+<td><code>view_item</code></td>
+<td style="text-align: right;">386,068</td>
+</tr>
+<tr>
+<td><code>session_start</code></td>
+<td style="text-align: right;">354,970</td>
+<td><code>first_visit</code></td>
+<td style="text-align: right;">257,462</td>
+</tr>
+<tr>
+<td><code>view_promotion</code></td>
+<td style="text-align: right;">190,104</td>
+<td><code>add_to_cart</code></td>
+<td style="text-align: right;">58,543</td>
+</tr>
+<tr>
+<td><code>begin_checkout</code></td>
+<td style="text-align: right;">38,757</td>
+<td><code>select_item</code></td>
+<td style="text-align: right;">31,007</td>
+</tr>
+<tr>
+<td><code>view_search_results</code></td>
+<td style="text-align: right;">26,172</td>
+<td><code>add_shipping_info</code></td>
+<td style="text-align: right;">19,722</td>
+</tr>
+<tr>
+<td><code>add_payment_info</code></td>
+<td style="text-align: right;">13,899</td>
+<td><code>select_promotion</code></td>
+<td style="text-align: right;">9,450</td>
+</tr>
+<tr>
+<td><code>purchase</code></td>
+<td style="text-align: right;">5,692</td>
+<td><code>click</code></td>
+<td style="text-align: right;">1,446</td>
+</tr>
+<tr>
+<td><code>view_item_list</code></td>
+<td style="text-align: right;">71</td>
+<td></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>All five requested ecommerce events are present. The 71
+<code>view_item_list</code> events are sparse compared with 386,068
+<code>view_item</code> events and warrant review before using list views
+as a denominator. Counts alone do not establish a tagging defect. Each
+client-specific event remains unverified. The blueprint calls for
+sanitized <code>page_location</code>, <code>cta_id</code> and
+<code>cta_location</code> for CTA analysis, and a stable
+<code>form_id</code> plus <code>lead_type = consultation_request</code>
+for validated lead reporting. Production parameter names, types and
+coverage need confirmation. <a href="https://hanamai111.github.io/ga4-analytics-blueprint-phd-orthodontics/ga4-1-analytics-blueprint.html">Measurement
+blueprint</a></p>
+<h2 data-number="3.4" id="d.-field-completeness"><span class="header-section-number">3.4</span> D. Field completeness</h2>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>Grain</th>
+<th>Field</th>
+<th style="text-align: right;">NULL or normalized blank</th>
+<th style="text-align: right;">Placeholder</th>
+<th style="text-align: right;">Denominator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event</td>
+<td><code>user_pseudo_id</code></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">4,295,584</td>
+</tr>
+<tr>
+<td>Event</td>
+<td>Integer <code>ga_session_id</code></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">4,295,584</td>
+</tr>
+<tr>
+<td>Page-view event</td>
+<td>Nonblank <code>page_location</code></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">Not profiled</td>
+<td style="text-align: right;">1,350,428</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>Landing page</td>
+<td style="text-align: right;">26,446 (7.34%)</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">360,129</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>Device category</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">360,129</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>Country</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2,882 (0.80%)</td>
+<td style="text-align: right;">360,129</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>First-user source</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">119,525 (33.19%)</td>
+<td style="text-align: right;">360,129</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>First-user medium</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">74,687 (20.74%)</td>
+<td style="text-align: right;">360,129</td>
+</tr>
+</tbody>
+</table>
+<p>GA4-5 checked raw NULL and blank user IDs separately, and both were
+zero. Session dimensions normalize trimmed blanks to NULL. Placeholder
+counts use <code>(not set)</code>, <code>&lt;other&gt;</code>,
+<code>(data deleted)</code>, and <code>(other)</code>. Conventional
+<code>(direct)</code> and <code>(none)</code> labels are outside that
+count. Source and medium describe <strong>first-user
+acquisition</strong>, recorded on the first observed event of each mart
+session. Landing page is the normalized URL on the first observed page
+view. Sessions can lack a page view, and page normalization can remove
+otherwise nonblank URL content. <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5
+validation</a></p>
+<h2 data-number="3.5" id="e.-identifiers-and-duplicates"><span class="header-section-number">3.5</span> E. Identifiers and
+duplicates</h2>
+<p>A session key represents the pair of the trimmed
+<code>user_pseudo_id</code> and an integer <code>ga_session_id</code>.
+The sample export had usable values for both on every row checked. The
+mart returned <strong>zero duplicate session keys</strong>, <strong>845
+cross-date sessions</strong>, and <strong>5,272 sessions with no
+observed <code>session_start</code></strong> in the fixed window.
+Cross-date means the pair appeared on more than one exported event date.
+Window edges can truncate activity. The raw comparison returned
+<strong>zero excess rows</strong> sharing a complete
+user/timestamp/event-name triplet. This diagnostic can miss repeated
+instrumentation with different timestamps, and identical triplets, when
+observed, require investigation before changing event counts.</p>
+<h2 data-number="3.6" id="f.-reconciliation"><span class="header-section-number">3.6</span> F. Reconciliation</h2>
+<p>GA4-5’s prior raw-to-mart reconciliation had zero differences for
+total events, <code>page_view</code>, and <code>purchase</code>. That
+validates the sample transformation. Direct numerical reconciliation
+with GA4 was infeasible because demo property <code>213025502</code> was
+viewed in an October–November 2026 window, whereas sample dates are in
+2020–2021 and the underlying event population is unverified. For
+production, align property and streams, property time zone, processing
+cutoff, date range, filters, event population, reporting identity, and
+definitions. Compare GA4 connector event counts, active users where
+supported, and sessions with scope-aligned BigQuery results. Investigate
+residual differences using consent, modeling, thresholding, reporting
+estimates, and late arrivals. <a href="https://hanamai111.github.io/ga4-3-bigquery-first-five-queries/">GA4-3
+reconciliation</a> · <a href="https://support.google.com/analytics/answer/7029846">GA4 export
+schema</a></p>
+<h2 data-number="3.7" id="g.-business-sense-check"><span class="header-section-number">3.7</span> G. Business sense check</h2>
+<p>The sample supports testing daily activity, page views, acquisition
+dimensions, sessions and a purchase funnel. GA4-5 found 61,252
+product-view entrants and 2,833 IDs progressing through all four ordered
+stages, potentially across sessions. Those counts describe ecommerce
+behavior. The client goal requires deduplicated eligible inquiries
+meeting practice-approved qualification criteria. Confirmed Consultation
+Inquiries are the interim proxy. The blueprint counts distinct started
+sessions with a later <code>generate_lead</code> for the same form
+within the same session and reporting period, divided by distinct
+started sessions. Report accepted requests without an observed start
+separately. For Google Ads evaluation, validate session/campaign
+attribution and link eligible inquiries to approved campaign and cost
+records. Review test/internal traffic, approved hostnames, and unusual
+country/device mixes during client QA. Bot and internal traffic
+classification was not established in the available sample. <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5</a> ·
+<a href="https://hanamai111.github.io/ga4-analytics-blueprint-phd-orthodontics/ga4-1-analytics-blueprint.html">Measurement
+blueprint</a></p>
+<h1 data-number="4" id="survey-data-preparation"><span class="header-section-number">4</span> Survey data preparation</h1>
+<p>The questionnaire draft uses adult consent and eligibility screening,
+a single self/child decision focus, and an exposure check after seven
+San Gabriel website screenshots. Ratings and two optional open-ended
+items are conditional on confirmed review. The consultation intention
+horizon is three months and the outcome concerns the existing San
+Gabriel practice. City of residence defines the two-city comparison.
+Other-city records can remain in eligible overall summaries, subject to
+authorization. Written answers and alternate text fields require
+restricted access and review for incidental identifying details.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Readiness item</th>
+<th>Status</th>
+<th>Evidence or dependency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Questionnaire and Construct and Measurement Table</td>
+<td>Completed</td>
+<td>Reviewed both working documents. Item wording, candidate groupings,
+and intended routing inform the dictionary and code.</td>
+</tr>
+<tr>
+<td>Qualtrics editor, embedded data and export recodes</td>
+<td>Unverified</td>
+<td><code>DecisionFocus</code> is proposed in the questionnaire notes.
+Match actual tags, recodes, carry-forward choices, privacy controls and
+display logic to the approved version before import.</td>
+</tr>
+<tr>
+<td>Study authorization and response provenance</td>
+<td>Pending authorization</td>
+<td>Last known study status is draft/unsubmitted. The previously
+reported count of 12 has unresolved provenance and does not establish an
+eligible research sample.</td>
+</tr>
+<tr>
+<td>SPSS import and metadata inspection</td>
+<td>Prepared but not executed on study data</td>
+<td>P11 describes checking collection/distribution status and exporting
+a labelled SPSS file. The approved team should document authorization
+and separately triage preview, pretest, unresolved and production
+cases.</td>
+</tr>
+<tr>
+<td>Core cleaning and scoring logic</td>
+<td>Completed on synthetic tests</td>
+<td>Preserves the raw subset, creates separate derived fields, and
+checks consent, screening, exposure, response status and composite
+behavior.</td>
+</tr>
+<tr>
+<td>Exact export mapping and supplemental questions</td>
+<td>Prepared but not executed</td>
+<td>Dictionary covers Q2 options and follow-ups plus written answers.
+Exact export tags and recodes are pending. Core script handles
+screening, context questions, and 16 ratings.</td>
+</tr>
+<tr>
+<td>Empirical reliability and composite validation</td>
+<td>Pending authorization</td>
+<td>Research estimates require authorized eligible responses and enough
+complete observations.</td>
+</tr>
+</tbody>
+</table>
+<p>Preserve Qualtrics records. Once authorized, designated staff can use
+known preview/test identifiers, collection-channel and time records, and
+a secure provenance ledger to exclude test and disputed rows in a
+separate analysis copy. Keep the original read-only and document
+inclusion decisions without releasing respondent identifiers. Confirm
+data minimization, access, retention, and disclosure limits with the
+approved protocol before implementation. <a href="https://canvas.cpp.edu/courses/143274/files/17028203/preview">P11
+handout</a> · <a href="https://jaejungca.github.io/case31/IC-M08-Data-Preparation-Case-31-R.html">Case
+31 R guide</a></p>
+<h1 data-number="5" id="r-preparation-workflow"><span class="header-section-number">5</span> R preparation workflow</h1>
+<ol type="1">
+<li>Inspect the authorized labelled SPSS export with
+<code>haven::read_sav(user_na = TRUE)</code>. Keep the file and original
+labels in restricted storage. Validate recodes against the
+questionnaire, Qualtrics export labels, and the versioned mapping.
+Inspect original labels, types, and missing counts before recoding.</li>
+<li>Use the questionnaire’s logical IDs as dictionary keys. Assign
+labels only on derived columns. Keep response-status companions for
+missing, not applicable, refusal, screening termination, and Cannot
+judge. Numeric zero remains valid only where the item defines it, such
+as a verified unselected Q2 option on an answered question. Confirm Q2
+selection context before converting unchecked to zero. Outside the
+shown/answered population, leave option values missing and capture
+routing status.</li>
+<li>Derive eligibility, decision focus, confirmed exposure, a two-city
+grouping, and a timing-band ordered factor using
+<code>dplyr::mutate()</code>. Keep Undecided and Already chosen as
+separate timing statuses. Exclude cases with incomplete or unconfirmed
+exposure from content ratings. Release only the eligible, authorized,
+restricted analysis copy after reviewing the outputs and export
+fields.</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;survey-preparation.R&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">test_synthetic</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># After authorization and after verifying the SPSS export mapping:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># raw &lt;- read_authorized_sav(approved_path, authorized = TRUE)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># dictionary_from_export &lt;- inspect_metadata(raw)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># clean &lt;- prepare_core(raw, verified_column_map, verified_code_maps,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#                       reviewed_provenance, authorized = TRUE)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># write_authorized_clean_sav(clean, restricted_new_path)</span></span></code></pre></div>
+<p><strong>Synthetic test data — not participant responses or empirical
+research findings.</strong> Five generated records tested provenance
+exclusion, consent refusal, decision focus, city nonresponse, Cannot
+judge, exposure skip, and mean scoring. The test completed in R. <a href="survey-preparation.R">R source</a> · <a href="survey-variable-dictionary.csv">Variable dictionary</a></p>
+<h1 data-number="6" id="reliability-and-composite-scale-readiness"><span class="header-section-number">6</span> Reliability and composite scale
+readiness</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Construct</th>
+<th>Items</th>
+<th>Proposed scoring</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Information quality</td>
+<td>IQ1–IQ4</td>
+<td>Report clarity, relevance, coverage and contact usefulness
+individually.</td>
+</tr>
+<tr>
+<td>Message credibility</td>
+<td>MC1–MC3</td>
+<td>Candidate mean across three descriptive ratings.</td>
+</tr>
+<tr>
+<td>Provider trustworthiness</td>
+<td>TR1–TR3</td>
+<td>Candidate mean across three agreement ratings.</td>
+</tr>
+<tr>
+<td>Presentation professionalism</td>
+<td>PR1–PR3</td>
+<td>Provisional candidate mean after wording and measurement
+review.</td>
+</tr>
+<tr>
+<td>Consultation intention</td>
+<td>CI1–CI3</td>
+<td>Candidate mean across three agreement ratings, interpreted as
+three-month intention toward San Gabriel.</td>
+</tr>
+</tbody>
+</table>
+<p>Ratings have ordered 1–5 response categories. All verified items
+point in the same direction, so no reverse coding is specified. Cannot
+judge is separate from ordinary nonresponse and never contributes to a
+mean. The default composite rule requires all three items and rescales
+nothing. A two-item rule can be tested as a documented sensitivity
+analysis after approval. Higher means indicate more of the measured
+attribute. Treat numeric means as approximately interval only with a
+stated equal-spacing assumption and use an ordinal sensitivity analysis
+when appropriate.</p>
+<p>For authorized data, examine item distributions, complete-case N,
+inter-item correlations, poorly performing items, floor/ceiling
+patterns, and Cronbach’s alpha. Review dimensionality and construct
+separation across candidate groups, using ordinal correlations when
+sample size and cell counts support them. An isolated one-factor model
+for three items can be just-identified, so its fit alone cannot
+establish dimensionality. Release a mean only after item meaning and
+measurement evidence support it. Keep empirical reliability pending
+until the approved sample is available.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># After approval of the sample and analysis plan:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># result &lt;- evaluate_candidate(clean, &quot;message_credibility&quot;, min_complete_n = plan_n)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># psych::fa(result$complete_items, nfactors = 1, cor = &quot;poly&quot;)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># clean &lt;- score_approved_scale(clean, &quot;message_credibility&quot;, approved = TRUE)</span></span></code></pre></div>
+<h1 class="unnumbered" id="references">References</h1>
+<ul>
+<li>IBM 6500. <a href="https://canvas.cpp.edu/courses/143274/pages/step-4-2a-apply-what-you-learned-to-your-project-and-work-on-cep-11-data-preparation-survey-data?module_item_id=5422879">Step
+4-2a</a> · <a href="https://canvas.cpp.edu/courses/143274/pages/step-4-2b-what-to-do-when-you-have-ga4-data-for-cep-11-data-preparation?module_item_id=5610772">Step
+4-2b</a> · <a href="https://canvas.cpp.edu/courses/143274/files/17028203/preview">P11
+— Downloading Raw Data</a>.</li>
+<li>Jung, J. <em>Data Preparation Assignment, Case 31</em>. <a href="https://jaejungca.github.io/case31/IC-M08-Data-Preparation-Case-31-R.html">R
+guide</a>.</li>
+<li>Group 6. <a href="https://hanamai111.github.io/ga4-analytics-blueprint-phd-orthodontics/ga4-1-analytics-blueprint.html">GA4-1
+Measurement Blueprint</a> · <a href="https://hanamai111.github.io/ga4-3-bigquery-first-five-queries/">GA4-3</a>
+· <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5</a>.
+Survey documentation draws on the November working questionnaire and CEP
+04 Construct and Measurement Table.</li>
+<li>Google. <a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset">GA4
+ecommerce sample</a> · <a href="https://support.google.com/analytics/answer/7029846">GA4 BigQuery
+export schema</a> · <a href="https://developers.google.com/analytics/bigquery/basic-queries">Basic
+BigQuery queries</a>.</li>
+<li>Qualtrics. <a href="https://www.qualtrics.com/support/survey-platform/data-and-analysis-module/data/download-data/export-data-overview/">Exporting
+response data</a>.</li>
+<li>Tidyverse. <a href="https://haven.tidyverse.org/reference/read_spss.html">haven SPSS
+import and export</a> · <a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr
+mutate</a>.</li>
+</ul>
+<h1 class="unnumbered" id="appendix">Appendix</h1>
+<h2 data-number="6.1" id="integrity-checklist-and-reproduction"><span class="header-section-number">6.1</span> Integrity checklist and
+reproduction</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Canvas check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A · Access/export</td>
+<td>Sample and existing mart read successfully. The client property
+displayed zero links. Production tables and team access are
+unverified.</td>
+</tr>
+<tr>
+<td>B · Coverage</td>
+<td>Fresh SQL confirmed 92 continuous days. Daily min/max and peak dates
+documented. Looker Studio verification pending.</td>
+</tr>
+<tr>
+<td>C · Event inventory</td>
+<td>Fresh SQL confirmed 17 event names. Client names and parameters
+require production QA.</td>
+</tr>
+<tr>
+<td>D · Completeness</td>
+<td>Job results and prior validation document identifier, URL and
+session-dimension quality.</td>
+</tr>
+<tr>
+<td>E · Identifier and duplicates</td>
+<td>Composite keys, timestamp triplets, cross-date sessions and
+unobserved starts checked.</td>
+</tr>
+<tr>
+<td>F · Reconciliation</td>
+<td>Prior raw-to-mart equality verified. A directly comparable GA4 UI
+population was unavailable.</td>
+</tr>
+<tr>
+<td>G · Business sense</td>
+<td>Sample supports ecommerce prototype. Client inquiry, qualification,
+attribution and traffic QA are pending.</td>
+</tr>
+</tbody>
+</table>
+<p>Run the two statements in <a href="ga4-integrity-checks.sql">ga4-integrity-checks.sql</a> separately
+in a US BigQuery project. The first reads the public export directly.
+The second reads the three GA4-5 views, which have separate access and
+expiration requirements. The November 23 job IDs end in
+<code>5QgjWCtSnRDVYUw43iFWN9FPqTH9</code> and
+<code>v5aqiwImaCnfI7kZPLFzVzJC3vnP</code>. The public baseline remains
+reproducible if Sandbox views expire. See the <a href="https://hanamai111.github.io/ga4-3-bigquery-first-five-queries/">GA4-3
+evidence</a>, <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/">GA4-5
+results</a>, <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/mart-views.sql">saved
+mart SQL</a> and <a href="https://hanamai111.github.io/ga4-5-analytics-mart-v1/validation.sql">validation
+SQL</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Independent reproduction of sample coverage and unique IDs.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">MIN</span>(event_date) <span class="kw">AS</span> first_day,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">MAX</span>(event_date) <span class="kw">AS</span> <span class="fu">last_day</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> event_date) <span class="kw">AS</span> recorded_dates,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="kw">events</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> <span class="fu">NULLIF</span>(<span class="fu">TRIM</span>(user_pseudo_id), <span class="st">&#39;&#39;</span>)) <span class="kw">AS</span> observed_ids</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `bigquery<span class="op">-</span><span class="kw">public</span><span class="op">-</span><span class="kw">data</span>.ga4_obfuscated_sample_ecommerce.events_<span class="op">*</span>`</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> _TABLE_SUFFIX <span class="kw">BETWEEN</span> <span class="st">&#39;20201101&#39;</span> <span class="kw">AND</span> <span class="st">&#39;20210131&#39;</span>;</span></code></pre></div>
+<h2 data-number="6.2" id="survey-mapping-and-authorization"><span class="header-section-number">6.2</span> Survey mapping and
+authorization</h2>
+<p><a href="survey-variable-dictionary.csv">Survey variable
+dictionary</a> · <a href="survey-preparation.R">R preparation
+script</a>. Logical IDs and response labels describe the working
+instrument. The production mapping requires export-version verification
+and authorized data. No participant records were accessed or downloaded,
+and no empirical reliability statistics were computed.</p>
+<h2 data-number="6.3" id="publication-links"><span class="header-section-number">6.3</span> Publication links</h2>
+<ul>
+<li><a href="https://github.com/hanamai111/cep11-data-preparation-phd-orthodontics">GitHub
+Repository</a></li>
+<li><a href="https://hanamai111.github.io/cep11-data-preparation-phd-orthodontics/">GitHub
+Pages report</a></li>
+</ul>
+</body>
+</html>
